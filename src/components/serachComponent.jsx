@@ -1,35 +1,37 @@
 import React, { Component } from "react";
 class searchCompo extends Component {
   state = {
-    i: 0,
-    value: "",
     dummyArr: ""
   };
 
   constructor(props) {
     super();
+    this.i = 0;
+    this.tmp = 0; //this tmp variable is to main state when searchbox is touched and now empty
     this.data = props.filterData;
-    console.log(this.data);
+    this.flag = 0; //flag is to manage while searching data is not found & also the keyup fired once
+   
   }
 
   myfunction = () => {
+    this.flag = 1;
     let valueInSerach = document.getElementById("myInput").value;
-    let fakeArr;
-    let tmp;
+    let fakeArr = "";
+    this.state.dummyArr = "";
     if (valueInSerach !== "") {
       fakeArr = this.data.filter(obj =>
         obj.name.toLowerCase().startsWith(valueInSerach.toLowerCase())
       );
-    tmp=1;
-      console.log(fakeArr);
+      this.i = 1;
+      // console.log(fakeArr);
     } else {
       fakeArr = "";
-      tmp=0;
+      this.i = 0;
+      this.tmp = 1;
     }
-    console.log(tmp);
+
     this.setState({
-      dummyArr: fakeArr,
-      i:tmp
+      dummyArr: fakeArr
     });
   };
 
@@ -44,11 +46,9 @@ class searchCompo extends Component {
       border: "1px solid #ddd",
       marginBottom: "12px"
     };
-    var handleToParent  =   this.props.changeDataByChild;
+    var handleToParent = this.props.changeDataByChild;
     return (
-      
       <div>
-       
         <input
           type="text"
           style={styles}
@@ -57,26 +57,21 @@ class searchCompo extends Component {
           placeholder="Search for names.."
           title="Type in a name"
         />
-        {
-          this.state.dummyArr.length > 0 ? (
-          this.state.dummyArr.map(obj => <p>{obj.name}</p>),
-          // console.log("Inside Search Component if block")
-        //  <button onClick={this.props.changeDataByChild(this.state.dummyArr)}></button>
-            handleToParent(this.state.dummyArr)
-          
-          ) : 
-          (
-          <p> </p>
-           )
-           
+        {this.state.dummyArr.length > 0 ? (    //this block is to check dummyarr has any values & keyup in
+          this.i === 1 && (                   //searchbox has fired
+            console.log("0 from "),
+            this.i = 0,
+           handleToParent(this.state.dummyArr)
+          ) 
+        ) 
+        : this.flag === 1   && (                //this else block is to use or to fire when dummyarray length is
+          ((this.flag = 0),                     // 0 but keyup event has fired //so we will show No data Found
+          handleToParent(this.state.dummyArr))
+        ) 
         }
-        {/* {
-          this.state.i === 1 ?
-          
-          : (
-            <p> </p>
-          )
-        } */}
+        
+        {/* this last box is to check if initial loading dn give full array to show all contents */}
+        {this.tmp === 1 ? ((this.tmp = 0), handleToParent(this.data)) : <p />} 
       </div>
     );
   }
