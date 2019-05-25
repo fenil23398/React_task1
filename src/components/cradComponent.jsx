@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import SerachComponent from "./serachComponent";
+import '../App.css';
 var storeData = require('../storingData');
 class cardDisplay extends Component {
   state = {
@@ -33,15 +34,17 @@ class cardDisplay extends Component {
 
   
     return (
-      <div className="row" style={mainContainer}>
+      <div className="row" id="mainContainer" >
         {this.state.data.map(obj => (
-          <div className="col-3" style={insideContainer}>
-            <img src={obj.img_url} style={imgSetting} />
-            <h4> {obj.name}</h4>
-            <div style={letHeightCard}>
+          
+          <div  className="col-3"  id="insideContainer">
+            <img src={obj.img_url} id="imgSetting" />
+            <h3 id="nameId"> {obj.name}</h3><br/>
+            <div id="letHeightCard">
               <p>{obj.description}</p>
             </div>
           </div>
+    
         ))}
       </div>
     );
